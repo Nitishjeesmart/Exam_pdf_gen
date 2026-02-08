@@ -679,5 +679,21 @@
         function replayHist(i) { let h = hist[i]; generatePDF(h.data, h.conf, h.mode === 'Teacher Key'); }
         function resetAll() { if(confirm('Factory Reset?')) { localStorage.clear(); location.reload(); } }
     </script>
+    <script>
+    function smartPrint() {
+        // अगर ऐप में है, तो मोबाइल का PDF सिस्टम खुलेगा
+        if (typeof Android !== 'undefined' && Android.printPage) {
+            Android.printPage();
+        } 
+        // अगर लिंक/क्रोम में है, तो नार्मल प्रिंट खुलेगा
+            
+    else {
+    window.print(); // यहाँ window.print() होना चाहिए, smartPrint() नहीं!
+}
+
+        }
+    }
+</script>
+
 </body>
 </html>
