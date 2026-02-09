@@ -25,7 +25,7 @@
         @keyframes bounce { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-20px);} }
         @keyframes slideUp { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
 
-        /* --- RIPPLE EFFECT (Water Touch) --- */
+        /* --- RIPPLE EFFECT --- */
         .ripple { position: absolute; border-radius: 50%; background: rgba(98, 0, 234, 0.3); transform: scale(0); animation: ripple-anim 0.6s linear; pointer-events: none; }
         @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
 
@@ -58,9 +58,8 @@
         .btn-danger { background: var(--danger); box-shadow: 0 4px 10px rgba(213, 0, 0, 0.3); }
         .btn-copy { background: #fff8e1; color: #f57c00; border: 1px solid #ffe0b2; justify-content: flex-start; margin-bottom: 8px; box-shadow: none; }
 
-        /* --- HISTORY SCROLL & ANIMATION --- */
+        /* --- HISTORY SCROLL --- */
         #histList { max-height: 600px; overflow-y: auto; padding-right: 2px; }
-        /* Marquee for Names */
         .hist-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; margin-bottom: 8px; border-radius: 10px; border: 1px solid #f5f5f5; }
         .hist-left { width: 65%; overflow: hidden; position: relative; }
         .marquee-wrap { white-space: nowrap; overflow: hidden; }
@@ -96,63 +95,74 @@
         .q-item { background: white; padding: 15px; margin-bottom: 10px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; justify-content: space-between; }
         .q-txt-div { width: 75%; font-size: 14px; font-weight: 500; color: #333; }
 
-        /* --- PRINT STYLES (100% FIXED) --- */
+        /* =======================================================
+           ✅✅✅ 100% FINAL FOOTER FIX (SMART LOCK) ✅✅✅
+           ======================================================= */
         @media print {
             .app-header, .bottom-nav, .tab-section, .modal-overlay, .wa-float, #splash, body > *:not(#print-area) { display: none !important; }
             body, html { background: white; margin: 0; padding: 0; width: 100%; height: 100%; overflow: visible; }
             #print-area { display: block !important; width: 100%; }
             
-            @page { size: A4; margin: 0.4cm 0.4cm 1.5cm 0.4cm; } /* Footer Space */
+            /* SAFE ZONE STRATEGY:
+               Bottom Margin = 1.0cm (Reserved space for footer)
+               This stops questions from entering the footer area.
+            */
+            @page { 
+                size: A4; 
+                margin: 0.3cm 0.3cm 1.0cm 0.3cm; 
+            }
 
             .print-container { width: 100%; font-family: Arial, sans-serif; color: black; position: relative; }
 
-            /* WATERMARK (FIXED - NO BREAK) */
+            /* WATERMARK */
             .p-watermark {
-                position: fixed; 
-                top: 50%; left: 50%; 
+                position: fixed; top: 50%; left: 50%; 
                 transform: translate(-50%, -50%) rotate(-45deg);
-                font-size: 60pt; 
-                color: rgba(0,0,0,0.08); /* Very Light */
-                white-space: nowrap; /* Forces single line */
-                pointer-events: none; 
-                z-index: -1; 
-                font-weight: 900;
-                font-family: 'Segoe UI', sans-serif;
-                text-transform: uppercase;
-                width: 200%; /* Ensure big enough container */
-                text-align: center;
+                font-size: 60pt; color: rgba(0,0,0,0.08); 
+                white-space: nowrap; pointer-events: none; z-index: -1; 
+                font-weight: 900; font-family: 'Segoe UI', sans-serif;
+                text-transform: uppercase; width: 200%; text-align: center;
             }
 
             /* HEADER */
-            .p-header { text-align: center; border-bottom: 2px solid black; padding-bottom: 5px; margin-bottom: 15px; }
-            .p-inst { font-family: 'Times New Roman', serif; font-size: 24pt; font-weight: 900; text-decoration: underline; text-transform: uppercase; line-height: 1.1; margin: 0; color: #000; }
-            .p-sub { font-size: 10pt; font-style: italic; margin-top: 4px; }
-            .p-exam { font-size: 14pt; font-weight: 800; text-decoration: underline; margin: 8px 0; }
-            .p-meta { display: flex; justify-content: space-between; font-size: 10pt; font-weight: 700; width: 100%; margin-top: 5px; }
+            .p-header { text-align: center; border-bottom: 2px solid black; padding-bottom: 3px; margin-bottom: 10px; }
+            .p-inst { font-family: 'Times New Roman', serif; font-size: 24pt; font-weight: 900; text-decoration: underline; text-transform: uppercase; line-height: 1.0; margin: 0; color: #000; }
+            .p-sub { font-size: 10pt; font-style: italic; margin-top: 2px; }
+            .p-exam { font-size: 14pt; font-weight: 800; text-decoration: underline; margin: 5px 0; }
+            .p-meta { display: flex; justify-content: space-between; font-size: 10pt; font-weight: 700; width: 100%; margin-top: 2px; }
             .p-right { text-align: right; }
 
-            /* STUDENT & CHAPTER ROW */
-            .p-chap-row { text-align: center; font-size: 11pt; font-weight: bold; margin: 5px 0; border: 1px solid #000; padding: 3px; background: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
-            .p-std-row { display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 11pt; font-weight: bold; padding: 5px 0; border-top: 1px dashed #666; border-bottom: 1px dashed #666; margin-bottom: 10px; gap: 15px; }
+            /* STUDENT ROW */
+            .p-chap-row { text-align: center; font-size: 11pt; font-weight: bold; margin: 2px 0; border: 1px solid #000; padding: 2px; background: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
+            .p-std-row { display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 11pt; font-weight: bold; padding: 3px 0; border-top: 1px dashed #666; border-bottom: 1px dashed #666; margin-bottom: 5px; gap: 10px; }
 
-            /* QUESTIONS */
-            .sec-h { text-align: center; font-size: 12pt; font-weight: 600; margin: 15px 0 5px 0; text-decoration: underline; }
-            .q-box { margin-bottom: 6pt; page-break-inside: avoid; font-size: 11pt; }
-            .q-txt { font-weight: 700; display: block; margin-bottom: 3px; text-align: justify; line-height: 1.2; }
+            /* QUESTIONS (COMPACT SPACING) */
+            .sec-h { text-align: center; font-size: 12pt; font-weight: 600; margin: 8px 0 2px 0; text-decoration: underline; }
+            .q-box { margin-bottom: 2px; page-break-inside: avoid; font-size: 11pt; }
+            .q-txt { font-weight: 700; display: block; margin-bottom: 1px; text-align: justify; line-height: 1.08; }
             
-            .opt-grid { display: grid; grid-template-columns: 25% 25% 25% 25%; width: 100%; font-size: 11pt; font-weight: normal; }
+            .opt-grid { display: grid; grid-template-columns: 25% 25% 25% 25%; width: 100%; font-size: 11pt; font-weight: normal; margin-top: 1px; }
             .opt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 2px; }
             
             .tick { font-family: "Segoe UI Symbol"; font-weight: bold; font-size: 12pt; }
-            .ans-panel { background: #eee !important; padding: 2px 5px; font-size: 10pt; font-style: italic; border-left: 3px solid #000; margin-top: 2px; -webkit-print-color-adjust: exact; }
+            .ans-panel { background: #eee !important; padding: 1px 5px; font-size: 10pt; font-style: italic; border-left: 3px solid #000; margin-top: 1px; -webkit-print-color-adjust: exact; }
 
-            /* FOOTER */
+            /* FOOTER LOCK:
+               Position Fixed + Bottom 0 = Stays at bottom of every page.
+               Since we gave Page Margin Bottom 1.0cm, the content will stop
+               before hitting this footer.
+            */
             .p-footer { 
-                position: fixed; bottom: 0; left: 0; right: 0; 
-                border-top: 2px solid #000; padding: 5px 0.4cm; 
-                background: white; display: flex; justify-content: space-between; 
+                position: fixed; 
+                bottom: 0; 
+                left: 0; right: 0; 
+                border-top: 2px solid #000; 
+                padding: 2px 0; 
+                background: white; 
+                display: flex; justify-content: space-between; 
                 font-family: 'Times New Roman', serif; font-weight: bold; font-size: 10pt;
-                z-index: 999; height: 25px;
+                z-index: 1000; 
+                height: 25px; /* Fixed Height */
             }
         }
         #print-area { display: none; }
@@ -678,19 +688,15 @@
         function clearHist() { if(confirm('Delete All History?')) { hist=[]; saveHi(); } }
         function replayHist(i) { let h = hist[i]; generatePDF(h.data, h.conf, h.mode === 'Teacher Key'); }
         function resetAll() { if(confirm('Factory Reset?')) { localStorage.clear(); location.reload(); } }
-                // ✅ यह नया फंक्शन (साफ़-सुथरा)
+
+        // ✅ FINAL SMART PRINT FUNCTION
         function smartPrint() {
-            // अगर Sketchware ऐप में है
             if (typeof Android !== 'undefined' && Android.printPage) {
-                Android.printPage(); 
-            } 
-            // अगर Chrome या Link में है
-            else {
-                window.print(); 
+                Android.printPage();
+            } else {
+                window.print();
             }
         }
-
-
     </script>
 </body>
 </html>
