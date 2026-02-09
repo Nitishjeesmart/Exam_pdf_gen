@@ -7,114 +7,452 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- CORE VARIABLES --- */
-        :root { --primary: #6200ea; --bg: #f4f7f6; --text: #2c3e50; --success: #00c853; --danger: #d50000; --wa: #25D366; }
+        :root { 
+            --primary: #6200ea; 
+            --primary-dark: #3700b3;
+            --primary-light: #7c3ff2;
+            --bg: #f4f7f6; 
+            --text: #2c3e50; 
+            --success: #00c853; 
+            --danger: #d50000;
+            --warning: #ff6d00;
+            --wa: #25D366;
+            --card-shadow: 0 12px 35px rgba(98, 0, 234, 0.12);
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text); 
+            padding-bottom: 90px; 
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
         /* --- SPLASH SCREEN --- */
         #splash {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #6200ea, #3700b3);
+            background: linear-gradient(135deg, #6200ea 0%, #3700b3 50%, #1a237e 100%);
             z-index: 9999; display: flex; flex-direction: column;
             align-items: center; justify-content: center; color: white;
             transition: opacity 0.8s ease-out;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
         }
-        .splash-logo { font-size: 80px; margin-bottom: 20px; animation: bounce 2s infinite; text-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .splash-title { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; animation: slideUp 1s; }
-        .splash-sub { font-size: 14px; opacity: 0.8; margin-top: 5px; font-style: italic; }
-        @keyframes bounce { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-20px);} }
-        @keyframes slideUp { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+        .splash-logo { 
+            font-size: 100px; 
+            margin-bottom: 20px; 
+            animation: bounce 2s infinite; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            filter: drop-shadow(0 5px 10px rgba(255,255,255,0.2));
+        }
+        .splash-title { 
+            font-size: 36px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            animation: slideUp 1s;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .splash-sub { 
+            font-size: 14px; 
+            opacity: 0.9; 
+            margin-top: 8px; 
+            font-style: italic;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        @keyframes bounce { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-30px);} }
+        @keyframes slideUp { from {opacity:0; transform: translateY(30px);} to {opacity:1; transform: translateY(0);} }
 
         /* --- RIPPLE EFFECT --- */
-        .ripple { position: absolute; border-radius: 50%; background: rgba(98, 0, 234, 0.3); transform: scale(0); animation: ripple-anim 0.6s linear; pointer-events: none; }
-        @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+        .ripple { position: absolute; border-radius: 50%; background: rgba(98, 0, 234, 0.4); transform: scale(0); animation: ripple-anim 0.6s linear; pointer-events: none; }
+        @keyframes ripple-anim { to { transform: scale(5); opacity: 0; } }
 
         /* --- HEADER --- */
-        .app-header { background: var(--primary); color: white; padding: 15px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .stats-pill { background: rgba(255,255,255,0.25); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: 4px; backdrop-filter: blur(5px); }
+        .app-header { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white; 
+            padding: 18px 15px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: var(--card-shadow);
+            border-bottom: 3px solid var(--primary-light);
+        }
+        .header-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-title i {
+            font-size: 24px;
+            animation: rotate 3s infinite linear;
+        }
+        @keyframes rotate { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+        
+        .stats-box { display: flex; gap: 8px; }
+        .stats-pill { 
+            background: rgba(255,255,255,0.2); 
+            padding: 6px 12px; 
+            border-radius: 25px; 
+            font-size: 11px; 
+            font-weight: 800; 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: 0.3s;
+        }
+        .stats-pill:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
 
         /* --- LAYOUT --- */
         .tab-section { display: none; padding: 15px; animation: fadeUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
         .tab-section.active { display: block; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { background: white; padding: 18px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
-        h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 17px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card { 
+            background: white; 
+            padding: 22px; 
+            border-radius: 18px; 
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px; 
+            border: 1px solid rgba(98, 0, 234, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(98, 0, 234, 0.15); }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--primary));
+        }
+
+        h3 { 
+            margin: 0 0 18px 0; 
+            color: var(--primary); 
+            font-size: 18px; 
+            border-bottom: 2px solid #f0f0f0; 
+            padding-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        h3 i { font-size: 22px; }
 
         /* --- INPUTS --- */
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 15px; background: #fafafa; outline: none; transition: 0.3s; margin-bottom: 10px; }
-        input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1); transform: translateY(-1px); }
-        label { font-size: 12px; font-weight: 700; color: #546e7a; margin-bottom: 5px; display: block; margin-top: 5px; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 13px 15px; 
+            border: 2px solid #e8e8e8; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            background: #fafbfc;
+            outline: none; 
+            transition: 0.3s; 
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--primary); 
+            background: #fff; 
+            box-shadow: 0 0 0 4px rgba(98, 0, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        label { 
+            font-size: 12px; 
+            font-weight: 800; 
+            color: #546e7a; 
+            margin-bottom: 6px; 
+            display: block; 
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .row-check { display: flex; flex-wrap: wrap; gap: 12px; background: #f1f8e9; padding: 12px; border-radius: 10px; margin-bottom: 10px; }
-        .check-item { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #33691e; }
-        .check-item input { width: 18px; height: 18px; margin: 0; accent-color: var(--success); }
+        .row-check { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 12px; 
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 15px;
+            border: 2px solid #c8e6c9;
+        }
+        .check-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 13px; 
+            font-weight: 700; 
+            color: #2e7d32;
+        }
+        .check-item input { 
+            width: 20px; 
+            height: 20px; 
+            margin: 0; 
+            accent-color: var(--success);
+            cursor: pointer;
+        }
 
         /* --- BUTTONS --- */
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; color: white; cursor: pointer; background: var(--primary); display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 10px rgba(98, 0, 234, 0.3); }
-        .btn:active { transform: scale(0.96); box-shadow: none; }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); box-shadow: none; }
-        .btn-danger { background: var(--danger); box-shadow: 0 4px 10px rgba(213, 0, 0, 0.3); }
-        .btn-copy { background: #fff8e1; color: #f57c00; border: 1px solid #ffe0b2; justify-content: flex-start; margin-bottom: 8px; box-shadow: none; }
+        .btn { 
+            width: 100%; 
+            padding: 16px; 
+            border: none; 
+            border-radius: 14px; 
+            font-size: 16px; 
+            font-weight: 800; 
+            color: white; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 10px; 
+            transition: 0.2s; 
+            box-shadow: 0 6px 20px rgba(98, 0, 234, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-outline { 
+            background: transparent; 
+            border: 2px solid var(--primary); 
+            color: var(--primary); 
+            box-shadow: none;
+        }
+        .btn-danger { 
+            background: linear-gradient(135deg, #d50000, #b71c1c);
+            box-shadow: 0 6px 20px rgba(213, 0, 0, 0.3);
+        }
+        .btn-copy { 
+            background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+            color: #e65100; 
+            border: 2px solid #ffb74d;
+            justify-content: flex-start; 
+            margin-bottom: 8px; 
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+            font-weight: 700;
+        }
 
         /* --- HISTORY SCROLL --- */
         #histList { max-height: 600px; overflow-y: auto; padding-right: 2px; }
-        .hist-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; margin-bottom: 8px; border-radius: 10px; border: 1px solid #f5f5f5; }
+        .hist-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 16px; 
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            margin-bottom: 10px; 
+            border-radius: 12px; 
+            border-left: 5px solid var(--primary);
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .hist-item:hover { transform: translateX(5px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
         .hist-left { width: 65%; overflow: hidden; position: relative; }
         .marquee-wrap { white-space: nowrap; overflow: hidden; }
-        .marquee-text { display: inline-block; padding-left: 0; animation: marquee 8s linear infinite; font-weight: bold; color: #37474f; }
+        .marquee-text { display: inline-block; padding-left: 0; animation: marquee 10s linear infinite; font-weight: bold; color: #37474f; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        .hist-meta { font-size: 11px; color: #90a4ae; margin-top: 2px; font-weight: 500; }
-        .btn-icon-sm { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .hist-meta { font-size: 11px; color: #90a4ae; margin-top: 4px; font-weight: 600; }
+        .btn-icon-sm { 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 10px; 
+            border: none; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.2s;
+            font-size: 18px;
+        }
+        .btn-icon-sm:active { transform: scale(0.9); }
 
         /* --- BOTTOM NAV --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; z-index: 99; height: 70px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        .nav-item { border: none; background: transparent; color: #b0bec5; display: flex; flex-direction: column; align-items: center; width: 20%; font-size: 10px; cursor: pointer; transition: 0.3s; }
-        .nav-icon { font-size: 22px; margin-bottom: 4px; }
-        .nav-item.active { color: var(--primary); transform: translateY(-5px); }
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: rgba(255,255,255,0.98); 
+            backdrop-filter: blur(20px);
+            border-top: 2px solid #e0e0e0;
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            z-index: 99; 
+            height: 75px;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.08);
+        }
+        .nav-item { 
+            border: none; 
+            background: transparent; 
+            color: #b0bec5; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            width: 20%; 
+            font-size: 10px; 
+            cursor: pointer; 
+            transition: 0.3s;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .nav-icon { font-size: 26px; margin-bottom: 4px; }
+        .nav-item.active { 
+            color: var(--primary); 
+            transform: translateY(-8px);
+        }
+        .nav-item.active .nav-icon {
+            animation: bounce 0.5s;
+        }
 
         /* --- MODALS --- */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px); }
-        .modal-box { background: white; width: 100%; max-width: 450px; padding: 25px; border-radius: 20px; display: flex; flex-direction: column; max-height: 85vh; overflow-y: auto; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+            backdrop-filter: blur(5px);
+        }
+        .modal-box { 
+            background: white; 
+            width: 100%; 
+            max-width: 450px; 
+            padding: 28px; 
+            border-radius: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* --- WHATSAPP --- */
-        .wa-float { position: fixed; bottom: 85px; right: 20px; background: var(--wa); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none; transition: transform 0.2s; }
+        .wa-float { 
+            position: fixed; 
+            bottom: 95px; 
+            right: 20px; 
+            background: linear-gradient(135deg, var(--wa), #1fb981);
+            color: white; 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 32px; 
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+            z-index: 1000; 
+            text-decoration: none; 
+            transition: transform 0.2s;
+            animation: pulse 2s infinite;
+        }
         .wa-float:active { transform: scale(0.9); }
+        @keyframes pulse { 0%, 100% {box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);} 50% {box-shadow: 0 8px 35px rgba(37, 211, 102, 0.6);} }
 
         /* --- DOWNLOAD ANIM --- */
         .dl-wrap { margin-bottom: 15px; position: relative; }
-        .anim-btn { position: relative; width: 100%; padding: 16px; font-size: 16px; font-weight: 700; color: white; border: none; border-radius: 30px; cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .btn-s { background: #263238; }
-        .btn-t { background: #c62828; }
-        .prog-bar { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--success); z-index: 1; transition: width 0.1s linear; }
+        .anim-btn { 
+            position: relative; 
+            width: 100%; 
+            padding: 18px; 
+            font-size: 17px; 
+            font-weight: 800; 
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-s { background: linear-gradient(135deg, #455a64, #263238); }
+        .btn-t { background: linear-gradient(135deg, #e53935, #c62828); }
+        .prog-bar { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            height: 100%; 
+            width: 0%; 
+            background: linear-gradient(90deg, var(--success), #66bb6a);
+            z-index: 1; 
+            transition: width 0.1s linear;
+        }
         .btn-txt { position: relative; z-index: 2; display: flex; gap: 10px; align-items: center; }
 
         /* --- LIST ITEMS --- */
-        .q-item { background: white; padding: 15px; margin-bottom: 10px; border-radius: 12px; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; justify-content: space-between; }
-        .q-txt-div { width: 75%; font-size: 14px; font-weight: 500; color: #333; }
+        .q-item { 
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            padding: 16px; 
+            margin-bottom: 12px; 
+            border-radius: 12px; 
+            border-left: 5px solid var(--primary); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            display: flex; 
+            justify-content: space-between;
+            transition: 0.3s;
+        }
+        .q-item:hover { transform: translateX(5px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .q-txt-div { width: 75%; font-size: 14px; font-weight: 600; color: #333; }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-btn:active { transform: scale(0.9); }
 
         /* =======================================================
-           ✅✅✅ 100% FINAL FOOTER FIX (SMART LOCK) ✅✅✅
+           ✅ FINAL FIXED PRINT STYLES ✅
            ======================================================= */
         @media print {
             .app-header, .bottom-nav, .tab-section, .modal-overlay, .wa-float, #splash, body > *:not(#print-area) { display: none !important; }
             body, html { background: white; margin: 0; padding: 0; width: 100%; height: 100%; overflow: visible; }
             #print-area { display: block !important; width: 100%; }
             
-            /* SAFE ZONE STRATEGY:
-               Bottom Margin = 1.0cm (Reserved space for footer)
-               This stops questions from entering the footer area.
-            */
-            @page { 
-                size: A4; 
-                margin: 0.3cm 0.3cm 1.0cm 0.3cm; 
-            }
+            @page { size: A4; margin: 0.3cm; }
 
             .print-container { width: 100%; font-family: Arial, sans-serif; color: black; position: relative; }
+            table.report-container { page-break-after: auto; width: 100%; border-collapse: collapse; }
+            thead.report-header { display: table-header-group; }
+            tfoot.report-footer { display: table-footer-group; }
+            .footer-space { height: 35px; } 
 
-            /* WATERMARK */
             .p-watermark {
                 position: fixed; top: 50%; left: 50%; 
                 transform: translate(-50%, -50%) rotate(-45deg);
@@ -124,64 +462,49 @@
                 text-transform: uppercase; width: 200%; text-align: center;
             }
 
-            /* HEADER */
-            .p-header { text-align: center; border-bottom: 2px solid black; padding-bottom: 3px; margin-bottom: 10px; }
+            .p-header-main { text-align: center; border-bottom: 2px solid black; padding-bottom: 3px; margin-bottom: 5px; }
             .p-inst { font-family: 'Times New Roman', serif; font-size: 24pt; font-weight: 900; text-decoration: underline; text-transform: uppercase; line-height: 1.0; margin: 0; color: #000; }
             .p-sub { font-size: 10pt; font-style: italic; margin-top: 2px; }
             .p-exam { font-size: 14pt; font-weight: 800; text-decoration: underline; margin: 5px 0; }
             .p-meta { display: flex; justify-content: space-between; font-size: 10pt; font-weight: 700; width: 100%; margin-top: 2px; }
             .p-right { text-align: right; }
-
-            /* STUDENT ROW */
             .p-chap-row { text-align: center; font-size: 11pt; font-weight: bold; margin: 2px 0; border: 1px solid #000; padding: 2px; background: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
             .p-std-row { display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 11pt; font-weight: bold; padding: 3px 0; border-top: 1px dashed #666; border-bottom: 1px dashed #666; margin-bottom: 5px; gap: 10px; }
-
-            /* QUESTIONS (COMPACT SPACING) */
             .sec-h { text-align: center; font-size: 12pt; font-weight: 600; margin: 8px 0 2px 0; text-decoration: underline; }
-            .q-box { margin-bottom: 2px; page-break-inside: avoid; font-size: 11pt; }
+            .q-box { margin-bottom: 2px; page-break-inside: avoid; break-inside: avoid; font-size: 11pt; }
             .q-txt { font-weight: 700; display: block; margin-bottom: 1px; text-align: justify; line-height: 1.08; }
-            
             .opt-grid { display: grid; grid-template-columns: 25% 25% 25% 25%; width: 100%; font-size: 11pt; font-weight: normal; margin-top: 1px; }
             .opt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 2px; }
-            
             .tick { font-family: "Segoe UI Symbol"; font-weight: bold; font-size: 12pt; }
             .ans-panel { background: #eee !important; padding: 1px 5px; font-size: 10pt; font-style: italic; border-left: 3px solid #000; margin-top: 1px; -webkit-print-color-adjust: exact; }
-
-            /* FOOTER LOCK:
-               Position Fixed + Bottom 0 = Stays at bottom of every page.
-               Since we gave Page Margin Bottom 1.0cm, the content will stop
-               before hitting this footer.
-            */
-            .p-footer { 
+            .p-footer-fixed { 
                 position: fixed; 
-                bottom: 0; 
-                left: 0; right: 0; 
-                border-top: 2px solid #000; 
-                padding: 2px 0; 
+                bottom: 0; left: 0; right: 0; 
+                border-top: 2px solid #000;
+                padding: 2px 0.3cm; 
                 background: white; 
                 display: flex; justify-content: space-between; 
                 font-family: 'Times New Roman', serif; font-weight: bold; font-size: 10pt;
-                z-index: 1000; 
-                height: 25px; /* Fixed Height */
+                z-index: 9999; 
+                height: 25px;
             }
         }
         #print-area { display: none; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div id="splash">
         <i class="fas fa-university splash-logo"></i>
-        <div class="splash-title" id="splashText">WELCOME</div>
-        <div class="splash-sub">अपने कोचिंग या संस्थान का नाम रहेगा।</div>
+        <div class="splash-title" id="splashText">स्वागत है</div>
+        <div class="splash-sub">आपकी परीक्षा तैयारी के लिए</div>
     </div>
-
-    <a href="https://wa.me/918292559844?text=Hello%20developer(Nitish%20Jee%20Smart)%20I%20need%20help%20!" target="_blank" class="wa-float">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <a href="https://wa.me/918292559844?text=Hello%20developer(Nitish%20Jee%20Smart)%20I%20need%20help%20!"  target="_blank" class="wa-float"><i class="fab fa-whatsapp"></i></a>
 
     <div class="app-header">
-        <div class="header-title"><i class="fas fa-graduation-cap"></i>Teacher's Name</div>
+        <div class="header-title"><i class="fas fa-graduation-cap"></i>Test Builder</div>
         <div class="stats-box">
             <span class="stats-pill" style="background:#8e24aa">MCQ:<span id="cM">0</span></span>
             <span class="stats-pill" style="background:#2e7d32">SQ:<span id="cS">0</span></span>
@@ -190,156 +513,152 @@
     </div>
 
     <div style="padding-bottom: 20px;">
-        
         <div id="tab-import" class="tab-section active">
             <div class="card">
-                <h3><i class="fas fa-file-import"></i>copy करके के किसी भी AI को दे !</h3>
-                <button class="btn btn-copy" onclick="getTemp('mcq')"><i class="fas fa-list-ol"></i> Copy 10 MCQs Format</button>
-                <button class="btn btn-copy" onclick="getTemp('short')"><i class="fas fa-align-left"></i> Copy 10 Short Format</button>
-                <button class="btn btn-copy" onclick="getTemp('long')"><i class="fas fa-align-justify"></i> Copy 10 Long Format</button>
-                <div style="border-top:1px solid #eee; margin:10px 0;"></div>
-                <textarea id="jsonIn" style="height:120px; font-family:monospace; font-size:12px;" placeholder="Paste JSON Code Here..."></textarea>
-                <button class="btn" onclick="runImport()"><i class="fas fa-check-circle"></i>अपना Ques Paste करे !</button>
+                <h3><i class="fas fa-file-import"></i>AI से सवाल जोड़ें</h3>
+                <button class="btn btn-copy" onclick="getTemp('mcq')"><i class="fas fa-list-ol"></i> 10 MCQs फॉर्मेट कॉपी करें</button>
+                <button class="btn btn-copy" onclick="getTemp('short')"><i class="fas fa-align-left"></i> 10 Short फॉर्मेट कॉपी करें</button>
+                <button class="btn btn-copy" onclick="getTemp('long')"><i class="fas fa-align-justify"></i> 10 Long फॉर्मेट कॉपी करें</button>
+                <div style="border-top:2px solid #e0e0e0; margin:15px 0;"></div>
+                <textarea id="jsonIn" style="height:120px; font-family:monospace; font-size:12px;" placeholder="JSON कोड यहाँ पेस्ट करें..."></textarea>
+                <button class="btn" onclick="runImport()"><i class="fas fa-check-circle"></i>सवाल जोड़ें</button>
             </div>
         </div>
 
         <div id="tab-manage" class="tab-section">
             <div class="card">
-                <h3><i class="fas fa-tasks"></i>Manual Question ठीक कर सकते हैं !</h3>
+                <h3><i class="fas fa-tasks"></i>सवालों को सुधारें</h3>
                 <div id="qListContainer"></div>
-                <div id="noData" style="text-align:center; padding:30px; color:#999; font-style:italic;">No Questions Added Yet.</div>
+                <div id="noData" style="text-align:center; padding:40px; color:#999; font-style:italic;">कोई सवाल नहीं जोड़ा गया</div>
             </div>
         </div>
-
+        
         <div id="tab-history" class="tab-section">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 style="margin:0; border:none;"><i class="fas fa-history"></i> PDF History</h3>
-                    <button onclick="clearHist()" style="color:var(--danger); border:none; background:none; font-weight:bold; cursor:pointer;">Clear All</button>
+                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="margin:0; border:none;"><i class="fas fa-history"></i> PDF इतिहास</h3>
+                    <button onclick="clearHist()" style="color:var(--danger); border:none; background:none; font-weight:bold; cursor:pointer; font-size:14px;">सभी हटाएं</button>
                 </div>
-                <input type="text" id="histSearch" placeholder="Search History..." onkeyup="filterHist()">
-                <div id="histList" onscroll="playScrollSound()"></div>
-                <div id="noHist" style="text-align:center; padding:30px; color:#999;">No History Found</div>
+                <input type="text" id="histSearch" placeholder="इतिहास खोजें...">
+                <div id="histList"></div>
+                <div id="noHist" style="text-align:center; padding:40px; color:#999;">कोई इतिहास नहीं मिला</div>
             </div>
         </div>
 
         <div id="tab-setup" class="tab-section">
             <div class="card">
-                <h3><i class="fas fa-sliders-h"></i>अपने संस्थान का विवरण डाले!</h3>
-                <label>Institute Name</label><input id="inst" value=" कोचिंग का नाम !">
-                <label>Address</label><input id="addr" value=" कोचिंग का Address ">
-                <label>Exam Title</label><input id="exam" value="Weekly Test Examination 2026">
+                <h3><i class="fas fa-sliders-h"></i>संस्थान की जानकारी</h3>
+                <label>संस्थान का नाम</label><input id="inst" value="कोचिंग का नाम">
+                <label>पता</label><input id="addr" value="संस्थान का पता">
+                <label>परीक्षा का शीर्षक</label><input id="exam" value="साप्ताहिक परीक्षा 2026">
                 
                 <div class="row-2">
-                    <div><label>Class</label><input id="cls" value="X"></div>
-                    <div><label>Subject</label><input id="sub" value="Science"></div>
+                    <div><label>कक्षा</label><input id="cls" value="X"></div>
+                    <div><label>विषय</label><input id="sub" value="विज्ञान"></div>
                 </div>
                 <div class="row-2">
-                    <div><label>Time</label><input id="time" value="1h 30m"></div>
-                    <div><label>Marks</label><input id="marks" value="50"></div>
+                    <div><label>समय</label><input id="time" value="1h 30m"></div>
+                    <div><label>अंक</label><input id="marks" value="50"></div>
                 </div>
                 <div class="row-2">
-                    <div><label>Total Q</label><input id="tot" value="30"></div>
-                    <div><label>Date</label><input id="date" value="12-02-2025"></div>
+                    <div><label>कुल प्रश्न</label><input id="tot" value="30"></div>
+                    <div><label>तारीख</label><input id="date" value="12-02-2025"></div>
                 </div>
 
-                <div style="background:#e8f5e9; padding:12px; border-radius:10px; margin-top:10px; border:1px solid #c8e6c9;">
-                    <label style="margin-top:0; color:#2e7d32;">Watermark Text (Background)</label>
-                    <input id="wMark" placeholder="e.g. Modern Coaching">
+                <div style="background:linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding:15px; border-radius:12px; margin-top:12px; border:2px solid #a5d6a7;">
+                    <label style="margin-top:0; color:#2e7d32;">वाटरमार्क टेक्स्ट</label>
+                    <input id="wMark" placeholder="उदा. Modern Coaching">
                 </div>
                 
-                <div style="background:#e3f2fd; padding:12px; border-radius:10px; margin-top:10px;">
-                    <label style="margin-top:0; color:#1565c0;">Chapter Name (Optional)</label>
+                <div style="background:linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding:15px; border-radius:12px; margin-top:12px; border:2px solid #90caf9;">
+                    <label style="margin-top:0; color:#1565c0;">अध्याय का नाम (वैकल्पिक)</label>
                     <div style="display:flex; gap:10px; align-items:center;">
                         <input type="checkbox" id="ckCh" style="width:20px; margin:0;">
-                        <input id="chap" placeholder="e.g. Light, Algebra" style="margin:0;">
+                        <input id="chap" placeholder="उदा. Light, Algebra" style="margin:0;">
                     </div>
                 </div>
 
-                <label style="color:var(--danger); margin-top:20px;">Student Details (Page 1):</label>
+                <label style="color:var(--danger); margin-top:20px;">छात्र विवरण:</label>
                 <div class="row-check">
-                    <div class="check-item"><input type="checkbox" id="ckNm" checked> Name</div>
-                    <div class="check-item"><input type="checkbox" id="ckRl" checked> Roll</div>
-                    <div class="check-item"><input type="checkbox" id="ckFt"> Father</div>
-                    <div class="check-item"><input type="checkbox" id="ckSt" checked> Set</div>
+                    <div class="check-item"><input type="checkbox" id="ckNm" checked> नाम</div>
+                    <div class="check-item"><input type="checkbox" id="ckRl" checked> रोल</div>
+                    <div class="check-item"><input type="checkbox" id="ckFt"> पिता</div>
+                    <div class="check-item"><input type="checkbox" id="ckSt" checked> सेट</div>
                 </div>
                 <div class="row-2">
-                    <input id="vNm" placeholder="Name Value">
-                    <input id="vRl" placeholder="Roll Value">
+                    <input id="vNm" placeholder="नाम">
+                    <input id="vRl" placeholder="रोल नंबर">
                 </div>
                 <div class="row-2">
-                    <input id="vFt" placeholder="Father Name">
-                    <select id="vSt"><option value="">Select Set</option><option>Set-A</option><option>Set-B</option><option>Set-C</option><option>Set-D</option></select>
+                    <input id="vFt" placeholder="पिता का नाम">
+                    <select id="vSt"><option value="">सेट चुनें</option><option>Set-A</option><option>Set-B</option><option>Set-C</option><option>Set-D</option></select>
                 </div>
 
-                <label>Footer Teacher Name</label><input id="teach" value="NITISH SIR">
-                <button class="btn btn-danger" onclick="resetAll()">Reset App</button>
+                <label>शिक्षक का नाम</label><input id="teach" value="NITISH SIR">
+                <button class="btn btn-danger" onclick="resetAll()"><i class="fas fa-sync-alt"></i>ऐप रीसेट करें</button>
             </div>
         </div>
 
         <div id="tab-print" class="tab-section">
             <div class="card" style="text-align:center;">
-                <div style="font-size:45px; margin-bottom:10px;">🖨️</div>
-                <h3>Generate PDF</h3>
-                
+                <div style="font-size:60px; margin-bottom:15px;">📄</div>
+                <h3>PDF बनाएं</h3>
                 <div class="dl-wrap">
                     <button id="btnS" class="anim-btn btn-s" onclick="startDL('student')">
                         <div class="prog-bar" id="pbS"></div>
-                        <span class="btn-txt" id="txS"><i class="fas fa-user-graduate"></i> Student Paper</span>
+                        <span class="btn-txt" id="txS"><i class="fas fa-user-graduate"></i> छात्र पेपर</span>
                     </button>
                 </div>
-
                 <div class="dl-wrap">
                     <button id="btnT" class="anim-btn btn-t" onclick="startDL('teacher')">
                         <div class="prog-bar" id="pbT"></div>
-                        <span class="btn-txt" id="txT"><i class="fas fa-chalkboard-teacher"></i> Teacher Key</span>
+                        <span class="btn-txt" id="txT"><i class="fas fa-chalkboard-teacher"></i> उत्तर कुंजी</span>
                     </button>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="goTab('tab-import',this)"><i class="fas fa-file-import nav-icon"></i>Import</button>
-        <button class="nav-item" onclick="goTab('tab-manage',this)"><i class="fas fa-edit nav-icon"></i>Manage</button>
-        <button class="nav-item" onclick="goTab('tab-history',this)"><i class="fas fa-clock nav-icon"></i>History</button>
-        <button class="nav-item" onclick="goTab('tab-setup',this)"><i class="fas fa-cog nav-icon"></i>Setup</button>
-        <button class="nav-item" onclick="goTab('tab-print',this)"><i class="fas fa-print nav-icon"></i>Print</button>
+        <button class="nav-item active" onclick="goTab('tab-import',this)"><i class="fas fa-file-import nav-icon"></i>जोड़ें</button>
+        <button class="nav-item" onclick="goTab('tab-manage',this)"><i class="fas fa-edit nav-icon"></i>सुधारें</button>
+        <button class="nav-item" onclick="goTab('tab-history',this)"><i class="fas fa-clock nav-icon"></i>इतिहास</button>
+        <button class="nav-item" onclick="goTab('tab-setup',this)"><i class="fas fa-cog nav-icon"></i>सेटअप</button>
+        <button class="nav-item" onclick="goTab('tab-print',this)"><i class="fas fa-print nav-icon"></i>प्रिंट</button>
     </div>
 
     <div id="modTemp" class="modal-overlay">
         <div class="modal-box">
-            <h3>Copy JSON</h3>
+            <h3>JSON कोड कॉपी करें</h3>
             <textarea id="txtTemp" style="height:250px; font-family:monospace; font-size:11px; background:#f5f5f5;" readonly></textarea>
             <div style="display:flex; gap:10px; margin-top:15px;">
-                <button class="btn" onclick="doCopy()">Copy Code</button>
-                <button class="btn btn-outline" onclick="closeMod('modTemp')">Close</button>
+                <button class="btn" onclick="doCopy()"><i class="fas fa-copy"></i>कॉपी करें</button>
+                <button class="btn btn-outline" onclick="closeMod('modTemp')">बंद करें</button>
             </div>
         </div>
     </div>
 
     <div id="modEdit" class="modal-overlay">
         <div class="modal-box">
-            <h3>Edit Question</h3>
+            <h3>सवाल संपादित करें</h3>
             <input type="hidden" id="eIdx"><input type="hidden" id="eTyp">
-            <label>Question</label><textarea id="eQ" style="height:80px;"></textarea>
+            <label>सवाल</label><textarea id="eQ" style="height:80px;"></textarea>
             <div id="boxOpt">
                 <div class="row-2">
-                    <input id="oA" placeholder="A"><input id="oB" placeholder="B">
+                    <input id="oA" placeholder="विकल्प A"><input id="oB" placeholder="विकल्प B">
                 </div>
                 <div class="row-2">
-                    <input id="oC" placeholder="C"><input id="oD" placeholder="D">
+                    <input id="oC" placeholder="विकल्प C"><input id="oD" placeholder="विकल्प D">
                 </div>
-                <label>Correct Answer</label><select id="eAns"><option>A</option><option>B</option><option>C</option><option>D</option></select>
+                <label>सही उत्तर</label><select id="eAns"><option>A</option><option>B</option><option>C</option><option>D</option></select>
             </div>
             <div id="boxWrt" class="hidden">
-                <label>Model Answer</label><textarea id="eMans" style="height:80px;"></textarea>
-                <label>Marks</label><input id="eMrk">
+                <label>मॉडल उत्तर</label><textarea id="eMans" style="height:80px;"></textarea>
+                <label>अंक</label><input id="eMrk">
             </div>
             <div style="display:flex; gap:10px; margin-top:15px;">
-                <button class="btn" onclick="saveEd()">Update Question</button>
-                <button class="btn btn-outline" onclick="closeMod('modEdit')">Cancel</button>
+                <button class="btn" onclick="saveEd()">अपडेट करें</button>
+                <button class="btn btn-outline" onclick="closeMod('modEdit')">रद्द करें</button>
             </div>
         </div>
     </div>
@@ -355,116 +674,71 @@
         window.onload = () => {
             if(localStorage.getItem('ev21_db')) db = JSON.parse(localStorage.getItem('ev21_db'));
             if(localStorage.getItem('ev21_hi')) hist = JSON.parse(localStorage.getItem('ev21_hi'));
-            
             initSplash();
             refresh();
             renderHist(hist);
             setupHaptic();
         };
 
-        // --- SPLASH SCREEN & SOUND ---
         function initSplash() {
             const v = localStorage.getItem('ev21_visit');
             const txt = document.getElementById('splashText');
-            
-            if(!v) {
-                txt.innerText = "WELCOME";
-                playTone('intro');
-                localStorage.setItem('ev21_visit', '1');
-            } else {
-                txt.innerText = "WELCOME BACK";
-                setTimeout(()=>playTone('back'), 500);
-            }
-            
+            if(!v) { txt.innerText = "स्वागत है"; playTone('intro'); localStorage.setItem('ev21_visit', '1'); }
+            else { txt.innerText = "वापस स्वागत है"; setTimeout(()=>playTone('back'), 500); }
             setTimeout(() => {
                 document.getElementById('splash').style.opacity = '0';
                 setTimeout(() => document.getElementById('splash').style.display='none', 800);
             }, 2000);
         }
 
-        // Generate Tones (No External Files)
+        // --- AUDIO & UI ---
         function playTone(type) {
             if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain); gain.connect(audioCtx.destination);
-            
             if(type === 'intro') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(440, audioCtx.currentTime);
                 gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.5);
             } else if (type === 'back') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
                 gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.3);
             } else if (type === 'water') {
-                // Scroll sound
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(300 + Math.random()*200, audioCtx.currentTime);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(300 + Math.random()*200, audioCtx.currentTime);
                 gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
                 osc.start(); osc.stop(audioCtx.currentTime + 0.1);
             }
         }
-
-        // --- HAPTIC & RIPPLE ---
-        function setupHaptic() {
-            document.addEventListener('click', (e) => {
-                if(navigator.vibrate) navigator.vibrate(15); // Haptic
-                createRipple(e);
-            });
-        }
-
+        function setupHaptic() { document.addEventListener('click', (e) => { if(navigator.vibrate) navigator.vibrate(15); createRipple(e); }); }
         function createRipple(e) {
-            const r = document.createElement('div');
-            r.className = 'ripple';
-            r.style.left = e.clientX + 'px';
-            r.style.top = e.clientY + 'px';
-            document.body.appendChild(r);
-            setTimeout(() => r.remove(), 600);
+            const r = document.createElement('div'); r.className = 'ripple';
+            r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
+            document.body.appendChild(r); setTimeout(() => r.remove(), 600);
         }
 
-        let lastScroll = 0;
-        function playScrollSound() {
-            const now = Date.now();
-            if(now - lastScroll > 150) { // Throttle sound
-                playTone('water');
-                lastScroll = now;
-            }
-        }
-
-        // --- DATA MANAGEMENT ---
+        // --- DATA OPS ---
         function save() { localStorage.setItem('ev21_db', JSON.stringify(db)); refresh(); }
         function saveHi() { localStorage.setItem('ev21_hi', JSON.stringify(hist)); renderHist(hist); }
-
         function refresh() {
-            document.getElementById('cM').innerText = db.m.length;
-            document.getElementById('cS').innerText = db.s.length;
+            document.getElementById('cM').innerText = db.m.length; 
+            document.getElementById('cS').innerText = db.s.length; 
             document.getElementById('cL').innerText = db.l.length;
-            
             const makeHTML = (arr, type) => arr.map((x, i) => `
                 <div class="q-item">
                     <div class="q-txt-div"><b>${type}${i+1}.</b> ${x.q.substring(0,60)}${x.q.length>60?'...':''}</div>
-                    <div>
-                        <button class="icon-btn" style="background:#fff3e0" onclick="edit('${type}',${i})">✏️</button>
-                        <button class="icon-btn" style="background:#ffebee" onclick="del('${type}',${i})">🗑️</button>
+                    <div style="display:flex; gap:8px;">
+                        <button class="icon-btn" style="background:#fff3e0; color:#e65100" onclick="edit('${type}',${i})">✏️</button>
+                        <button class="icon-btn" style="background:#ffebee; color:#c62828" onclick="del('${type}',${i})">🗑️</button>
                     </div>
-                </div>
-            `).join('');
-            
+                </div>`).join('');
             document.getElementById('qListContainer').innerHTML = makeHTML(db.m, 'Q') + makeHTML(db.s, 'S') + makeHTML(db.l, 'L');
             document.getElementById('noData').style.display = (db.m.length+db.s.length+db.l.length)?'none':'block';
         }
 
-        // --- IMPORT LOGIC (FIXED COUNT) ---
         function getTemp(t) {
             let arr = [];
-            // FIXED LOOP: Exactly 10 items
             for(let i=1; i<=10; i++) {
                 if(t==='mcq') arr.push({question:`Sample Question ${i}?`, options:{A:"Opt A",B:"Opt B",C:"Opt C",D:"Opt D"}, correct:"A"});
                 else arr.push({type:t, question:`Sample ${t.toUpperCase()} Question ${i}?`, model_answer:`Answer ${i}...`, marks: t==='short'?2:5});
@@ -472,43 +746,40 @@
             document.getElementById('txtTemp').value = JSON.stringify(arr, null, 2);
             document.getElementById('modTemp').style.display='flex';
         }
-
         function runImport() {
             try {
-                let box = document.getElementById('jsonIn');
-                let j = JSON.parse(box.value);
+                let j = JSON.parse(document.getElementById('jsonIn').value); 
                 if(!Array.isArray(j)) j=[j];
-                
-                let countM=0, countS=0, countL=0;
-                
+                let cM=0, cS=0, cL=0;
                 j.forEach(x => {
-                    let ans = x.model_answer; if(typeof ans === 'object') ans = JSON.stringify(ans);
+                    let ans = x.model_answer; 
+                    if(typeof ans === 'object') ans = JSON.stringify(ans);
                     if(x.options) { 
-                        let o=x.options; if(!Array.isArray(o)) o=[o.A,o.B,o.C,o.D]; 
-                        db.m.push({q:x.question,o:o,a:x.correct}); countM++;
+                        let o=x.options; 
+                        if(!Array.isArray(o)) o=[o.A,o.B,o.C,o.D]; 
+                        db.m.push({q:x.question,o:o,a:x.correct}); 
+                        cM++;
                     } else { 
                         let isL=x.type&&x.type.includes('long'); 
-                        db[isL?'l':'s'].push({q:x.question,m:x.marks||2,a:ans});
-                        isL ? countL++ : countS++;
+                        db[isL?'l':'s'].push({q:x.question,m:x.marks||2,a:ans}); 
+                        isL?cL++:cS++;
                     }
                 });
-                save();
-                box.value = ''; // Clear Box
-                alert(`Success!\nAdded:\n• ${countM} MCQs\n• ${countS} Short Questions\n• ${countL} Long Questions`);
-            } catch(e) { alert('Invalid JSON Format'); }
+                save(); 
+                document.getElementById('jsonIn').value=''; 
+                alert(`जोड़ा गया: ${cM} MCQs, ${cS} Short, ${cL} Long`);
+            } catch(e) { alert('अमान्य JSON'); }
         }
 
-        // --- PDF GENERATION (FIXED WATERMARK) ---
+        // --- PDF GENERATION (FIXED - NO JAVASCRIPT DISPLAY BUG) ---
         function generatePDF(dataObj, cfg, isT) {
             const P = document.getElementById('print-area');
             P.innerHTML = ''; 
-            let con = document.createElement('div');
-            con.className = 'print-container';
-
-            if(cfg.vWater) { con.innerHTML += `<div class="p-watermark">${cfg.vWater}</div>`; }
-
-            // Header
-            let html = `
+            
+            // 1. MAIN HEADER
+            let headerDiv = document.createElement('div');
+            headerDiv.className = 'p-header-main';
+            let headerHTML = `
                 <div class="p-header">
                     <div class="p-inst">${cfg.inst}</div>
                     <div class="p-sub">${cfg.addr}</div>
@@ -519,19 +790,43 @@
                     </div>
                 </div>
             `;
-
-            if(cfg.showCh && cfg.vChap) html += `<div class="p-chap-row">Chapter: ${cfg.vChap}</div>`;
-
+            if(cfg.showCh && cfg.vChap) headerHTML += `<div class="p-chap-row">Chapter: ${cfg.vChap}</div>`;
+            
             let stdInfo = [];
             if(cfg.showNm) stdInfo.push(`Name: ${cfg.vNm || '...........................'}`);
             if(cfg.showRl) stdInfo.push(`Roll: ${cfg.vRl || '........'}`);
             if(cfg.showFt) stdInfo.push(`Father: ${cfg.vFt || '...........................'}`);
             if(cfg.showSt) stdInfo.push(`Set: ${cfg.vSt || '...'}`);
-            if(stdInfo.length) html += `<div class="p-std-row">${stdInfo.map(s => `<span>${s}</span>`).join('')}</div>`;
+            if(stdInfo.length) headerHTML += `<div class="p-std-row">${stdInfo.map(s => `<span>${s}</span>`).join('')}</div>`;
+            
+            headerDiv.innerHTML = headerHTML;
+            P.appendChild(headerDiv);
 
-            // Questions
+            // 2. CONTENT TABLE
+            let table = document.createElement('table');
+            table.className = 'report-container';
+
+            let thead = document.createElement('thead');
+            table.appendChild(thead);
+
+            let tfoot = document.createElement('tfoot');
+            tfoot.className = 'report-footer';
+            let tfRow = document.createElement('tr');
+            let tfCell = document.createElement('td');
+            tfCell.innerHTML = `<div class="footer-space">&nbsp;</div>`; 
+            tfRow.appendChild(tfCell);
+            tfoot.appendChild(tfRow);
+            table.appendChild(tfoot);
+
+            let tbody = document.createElement('tbody');
+            let tbRow = document.createElement('tr');
+            let tbCell = document.createElement('td');
+            
+            let bodyHTML = `<div class="print-container">`;
+            if(cfg.vWater) bodyHTML += `<div class="p-watermark">${cfg.vWater}</div>`;
+            
             if(dataObj.m.length) {
-                html += `<div class="sec-h">Section - A (Objective)</div>`;
+                bodyHTML += `<div class="sec-h">Section - A (Objective)</div>`;
                 dataObj.m.forEach((q, i) => {
                     let opts = '';
                     q.o.forEach((txt, idx) => {
@@ -541,162 +836,169 @@
                         let check = (isT && isCorrect) ? '<span class="tick"> ✔</span>' : '';
                         opts += `<div class="opt" style="${style}">${lbl} ${txt}${check}</div>`;
                     });
-                    html += `<div class="q-box"><span class="q-txt">${i+1}. ${q.q}</span><div class="opt-grid">${opts}</div></div>`;
+                    bodyHTML += `<div class="q-box"><span class="q-txt">${i+1}. ${q.q}</span><div class="opt-grid">${opts}</div></div>`;
                 });
             }
 
             const renderWrit = (arr, title) => {
                 if(arr.length) {
-                    html += `<div class="sec-h">${title}</div>`;
+                    bodyHTML += `<div class="sec-h">${title}</div>`;
                     arr.forEach((q, i) => {
-                        html += `<div class="q-box"><span class="q-txt">${i+1}. ${q.q} <span style="float:right">[${q.m}]</span></span>`;
-                        if(isT) html += `<div class="ans-panel"><b>Ans:</b> ${q.a}</div>`;
-                        html += `</div>`;
+                        bodyHTML += `<div class="q-box"><span class="q-txt">${i+1}. ${q.q} <span style="float:right">[${q.m}]</span></span>`;
+                        if(isT) bodyHTML += `<div class="ans-panel"><b>Ans:</b> ${q.a}</div>`;
+                        bodyHTML += `</div>`;
                     });
                 }
             };
             renderWrit(dataObj.s, 'Section - B (Short Answer)');
             renderWrit(dataObj.l, 'Section - C (Long Answer)');
 
-            // Footer
-            html += `<div class="p-footer"><span>By:- ${cfg.teach}</span><span></span></div>`;
+            bodyHTML += `</div>`;
+            tbCell.innerHTML = bodyHTML;
+            tbRow.appendChild(tbCell);
+            tbody.appendChild(tbRow);
+            table.appendChild(tbody);
 
-            con.innerHTML += html;
-            P.appendChild(con);
+            P.appendChild(table);
+
+            // 3. FIXED FOOTER
+            let footerOverlay = document.createElement('div');
+            footerOverlay.className = 'p-footer-fixed';
+            footerOverlay.innerHTML = `<span>By:- ${cfg.teach}</span><span></span>`;
+            P.appendChild(footerOverlay);
+
             smartPrint();
         }
 
-        // --- UTILS & NAVIGATION ---
+        // --- UTILS ---
         function goTab(id, btn) {
             document.querySelectorAll('.tab-section').forEach(x => x.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
             btn.classList.add('active');
-            if(id === 'tab-history') { 
-                hist = JSON.parse(localStorage.getItem('ev21_hi') || '[]'); 
-                renderHist(hist); 
-            }
         }
-
         function getFilename(c) {
             let name = c.sub; 
-            if(c.showSt && c.vSt) name += "_" + c.vSt; 
-            if(c.showNm && c.vNm) name += "_" + c.vNm.replace(/\s+/g,''); 
-            name += "_" + c.date; 
-            name += "_" + c.exam.replace(/\s+/g,'').substring(0,10);
-            let count = parseInt(localStorage.getItem('ev21_count') || "0") + 1;
-            localStorage.setItem('ev21_count', count);
-            name += "_" + count;
-            if(c.showCh && c.vChap) name += "_" + c.vChap.replace(/\s+/g,'');
-            return name;
+            if(c.showSt && c.vSt) name+="_"+c.vSt; 
+            if(c.showNm && c.vNm) name+="_"+c.vNm.replace(/\s+/g,''); 
+            let cnt = parseInt(localStorage.getItem('ev21_count')||"0")+1; 
+            localStorage.setItem('ev21_count', cnt);
+            return name + "_" + c.date + "_" + cnt;
         }
-
         function getConfig() {
             return {
-                inst: document.getElementById('inst').value,
-                addr: document.getElementById('addr').value,
+                inst: document.getElementById('inst').value, 
+                addr: document.getElementById('addr').value, 
                 exam: document.getElementById('exam').value,
-                cls: document.getElementById('cls').value,
-                sub: document.getElementById('sub').value,
+                cls: document.getElementById('cls').value, 
+                sub: document.getElementById('sub').value, 
                 time: document.getElementById('time').value,
-                marks: document.getElementById('marks').value,
-                tot: document.getElementById('tot').value,
+                marks: document.getElementById('marks').value, 
+                tot: document.getElementById('tot').value, 
                 date: document.getElementById('date').value,
-                teach: document.getElementById('teach').value,
+                teach: document.getElementById('teach').value, 
                 vWater: document.getElementById('wMark').value,
-                showNm: document.getElementById('ckNm').checked,
-                showRl: document.getElementById('ckRl').checked,
+                showNm: document.getElementById('ckNm').checked, 
+                showRl: document.getElementById('ckRl').checked, 
                 showFt: document.getElementById('ckFt').checked,
-                showSt: document.getElementById('ckSt').checked,
+                showSt: document.getElementById('ckSt').checked, 
                 showCh: document.getElementById('ckCh').checked,
-                vNm: document.getElementById('vNm').value,
-                vRl: document.getElementById('vRl').value,
-                vFt: document.getElementById('vFt').value,
-                vSt: document.getElementById('vSt').value,
+                vNm: document.getElementById('vNm').value, 
+                vRl: document.getElementById('vRl').value, 
+                vFt: document.getElementById('vFt').value, 
+                vSt: document.getElementById('vSt').value, 
                 vChap: document.getElementById('chap').value
             };
         }
-
         function startDL(mode) {
             let btn = document.getElementById(mode==='student'?'btnS':'btnT');
             let bar = document.getElementById(mode==='student'?'pbS':'pbT');
-            if(btn.classList.contains('l')) return;
+            if(btn.classList.contains('l')) return; 
             btn.classList.add('l');
-            let w=0;
-            let tm = setInterval(() => {
-                if(w>=100) {
+            let w=0, tm = setInterval(() => {
+                if(w>=100) { 
                     clearInterval(tm);
-                    let conf = getConfig();
-                    let snap = JSON.parse(JSON.stringify(db));
-                    let fname = getFilename(conf);
-                    
-                    hist.unshift({ fname: fname, date: new Date().toLocaleString(), mode: mode==='student'?'Student':'Teacher Key', data: snap, conf: conf });
-                    saveHi();
-
-                    document.title = fname; 
+                    let conf = getConfig(), snap = JSON.parse(JSON.stringify(db));
+                    hist.unshift({fname: getFilename(conf), date: new Date().toLocaleString(), mode: mode==='student'?'Student':'Teacher', data: snap, conf: conf});
+                    saveHi(); 
+                    document.title = hist[0].fname; 
                     generatePDF(snap, conf, mode==='teacher');
-                    
                     setTimeout(()=>{ btn.classList.remove('l'); bar.style.width='0%'; }, 2000);
-                } else { w+=10; bar.style.width=w+'%'; }
+                } else { 
+                    w+=10; 
+                    bar.style.width=w+'%'; 
+                }
             }, 50);
         }
-
         function renderHist(list) {
-            const hC = document.getElementById('histList');
-            if(!list || list.length === 0) { hC.innerHTML=''; document.getElementById('noHist').style.display='block'; return; }
+            const hC = document.getElementById('histList'); 
+            if(!list || !list.length) { 
+                hC.innerHTML=''; 
+                document.getElementById('noHist').style.display='block'; 
+                return; 
+            }
             document.getElementById('noHist').style.display='none';
-            
-            hC.innerHTML = list.map((x, i) => `
-                <div class="hist-item">
-                    <div class="hist-left">
-                        <div class="marquee-wrap"><span class="marquee-text">${x.fname}</span></div>
-                        <div class="hist-meta">${x.date} • ${x.mode}</div>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn-icon-sm" style="background:#e3f2fd; color:#1565c0" onclick="replayHist(${hist.indexOf(x)})"><i class="fas fa-download"></i></button>
-                        <button class="btn-icon-sm" style="background:#ffebee; color:#c62828" onclick="delHist(${hist.indexOf(x)})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
+            hC.innerHTML = list.map((x, i) => `<div class="hist-item"><div class="hist-left"><div class="marquee-wrap"><span class="marquee-text">${x.fname}</span></div><div class="hist-meta">${x.date} • ${x.mode}</div></div><div style="display:flex; gap:8px;"><button class="btn-icon-sm" style="background:#e3f2fd; color:#1565c0" onclick="replayHist(${i})">⬇️</button><button class="btn-icon-sm" style="background:#ffebee; color:#c62828" onclick="delHist(${i})">🗑️</button></div></div>`).join('');
         }
-
-        function doCopy() { document.getElementById('txtTemp').select(); document.execCommand('copy'); alert('Copied to Clipboard!'); }
+        function doCopy() { 
+            document.getElementById('txtTemp').select(); 
+            document.execCommand('copy'); 
+            alert('कॉपी हो गया!');
+        }
         function closeMod(id) { document.getElementById(id).style.display='none'; }
-        function del(t, i) { if(confirm('Delete?')) { (t==='Q'?db.m:(t==='S'?db.s:db.l)).splice(i,1); save(); } }
+        function del(t, i) { 
+            if(confirm('हटाना है?')) { 
+                (t==='Q'?db.m:(t==='S'?db.s:db.l)).splice(i,1); 
+                save(); 
+            } 
+        }
         function edit(t, i) {
             let d = t==='Q'?db.m[i]:(t==='S'?db.s[i]:db.l[i]);
-            document.getElementById('eIdx').value = i; document.getElementById('eTyp').value = t;
+            document.getElementById('eIdx').value = i; 
+            document.getElementById('eTyp').value = t; 
             document.getElementById('eQ').value = d.q;
             if(t==='Q') {
-                document.getElementById('boxOpt').classList.remove('hidden'); document.getElementById('boxWrt').classList.add('hidden');
-                ['A','B','C','D'].forEach((k, idx) => document.getElementById('o'+k).value = d.o[idx]);
+                document.getElementById('boxOpt').classList.remove('hidden'); 
+                document.getElementById('boxWrt').classList.add('hidden');
+                ['A','B','C','D'].forEach((k, idx) => document.getElementById('o'+k).value = d.o[idx]); 
                 document.getElementById('eAns').value = d.a;
             } else {
-                document.getElementById('boxOpt').classList.add('hidden'); document.getElementById('boxWrt').classList.remove('hidden');
-                document.getElementById('eMans').value = d.a; document.getElementById('eMrk').value = d.m;
-            }
+                document.getElementById('boxOpt').classList.add('hidden'); 
+                document.getElementById('boxWrt').classList.remove('hidden');
+                document.getElementById('eMans').value = d.a; 
+                document.getElementById('eMrk').value = d.m;
+            } 
             document.getElementById('modEdit').style.display='flex';
         }
         function saveEd() {
-            let i=document.getElementById('eIdx').value, t=document.getElementById('eTyp').value, q=document.getElementById('eQ').value;
-            if(t==='Q') { db.m[i]={q:q, o:['A','B','C','D'].map(k=>document.getElementById('o'+k).value), a:document.getElementById('eAns').value}; }
-            else { db[t==='S'?'s':'l'][i]={q:q, m:document.getElementById('eMrk').value, a:document.getElementById('eMans').value}; }
-            save(); closeMod('modEdit');
+            let i=document.getElementById('eIdx').value, 
+                t=document.getElementById('eTyp').value, 
+                q=document.getElementById('eQ').value;
+            if(t==='Q') {
+                db.m[i]={q:q, o:['A','B','C','D'].map(k=>document.getElementById('o'+k).value), a:document.getElementById('eAns').value};
+            } else {
+                db[t==='S'?'s':'l'][i]={q:q, m:document.getElementById('eMrk').value, a:document.getElementById('eMans').value};
+            }
+            save(); 
+            closeMod('modEdit');
         }
-        function filterHist() { let term = document.getElementById('histSearch').value.toLowerCase(); renderHist(hist.filter(h => h.fname.toLowerCase().includes(term))); }
+        function filterHist() { 
+            let t = document.getElementById('histSearch').value.toLowerCase(); 
+            renderHist(hist.filter(h => h.fname.toLowerCase().includes(t))); 
+        }
         function delHist(i) { hist.splice(i,1); saveHi(); }
-        function clearHist() { if(confirm('Delete All History?')) { hist=[]; saveHi(); } }
-        function replayHist(i) { let h = hist[i]; generatePDF(h.data, h.conf, h.mode === 'Teacher Key'); }
-        function resetAll() { if(confirm('Factory Reset?')) { localStorage.clear(); location.reload(); } }
-
+        function clearHist() { if(confirm('सभी हटाना है?')) { hist=[]; saveHi(); } }
+        function replayHist(i) { let h = hist[i]; generatePDF(h.data, h.conf, h.mode === 'Teacher'); }
+        function resetAll() { if(confirm('ऐप रीसेट करना है?')) { localStorage.clear(); location.reload(); } }
+        
         // ✅ FINAL SMART PRINT FUNCTION
         function smartPrint() {
-            if (typeof Android !== 'undefined' && Android.printPage) {
-                Android.printPage();
-            } else {
-                window.print();
+            if (typeof Android !== 'undefined' && Android.printPage) { 
+                Android.printPage(); 
+            } else { 
+                window.print(); 
             }
         }
     </script>
 </body>
-</html>
+        </html>
