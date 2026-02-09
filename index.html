@@ -678,11 +678,18 @@
         function clearHist() { if(confirm('Delete All History?')) { hist=[]; saveHi(); } }
         function replayHist(i) { let h = hist[i]; generatePDF(h.data, h.conf, h.mode === 'Teacher Key'); }
         function resetAll() { if(confirm('Factory Reset?')) { localStorage.clear(); location.reload(); } }
-        // ✅ यह नया फंक्शन जोड़ें
+                // ✅ यह नया फंक्शन (साफ़-सुथरा)
         function smartPrint() {
-        if (typeof Android !== 'undefined' && Android.printPage) {
-        Android.printPage(); // ऐप   } else {
-        window.print(); // लिंक/क्रोम के   } }
+            // अगर Sketchware ऐप में है
+            if (typeof Android !== 'undefined' && Android.printPage) {
+                Android.printPage(); 
+            } 
+            // अगर Chrome या Link में है
+            else {
+                window.print(); 
+            }
+        }
+
 
     </script>
 </body>
