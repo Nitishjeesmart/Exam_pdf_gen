@@ -553,7 +553,7 @@
 
             con.innerHTML += html;
             P.appendChild(con);
-            window.print();
+            smartPrint();
         }
 
         // --- UTILS & NAVIGATION ---
@@ -678,6 +678,12 @@
         function clearHist() { if(confirm('Delete All History?')) { hist=[]; saveHi(); } }
         function replayHist(i) { let h = hist[i]; generatePDF(h.data, h.conf, h.mode === 'Teacher Key'); }
         function resetAll() { if(confirm('Factory Reset?')) { localStorage.clear(); location.reload(); } }
+        // ✅ यह नया फंक्शन जोड़ें
+        function smartPrint() {
+        if (typeof Android !== 'undefined' && Android.printPage) {
+        Android.printPage(); // ऐप   } else {
+        window.print(); // लिंक/क्रोम के   } }
+
     </script>
 </body>
 </html>
