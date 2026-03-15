@@ -1177,18 +1177,34 @@ function buildPDFContent(dataObj,cfg,isT,setLabel){
   if(cfg.inst) html+=`<div class="p-inst ${cfg.instFont}" style="color:${cfg.headerTextColor}">${cfg.inst}</div>`;
   if(cfg.addr) html+=`<div class="p-addr ${cfg.addrFont}" style="color:${cfg.headerTextColor}">${cfg.addr}</div>`;
   if(cfg.exam) html+=`<div class="p-exam-title ${cfg.examFont}" style="color:${cfg.headerTextColor}">${cfg.exam}${isT?' (Answer Key)':''}${setLabel?' — '+setLabel:''}</div>`;
-  const lm=[(cfg.cls?`Class: ${cfg.cls}`:''), (cfg.sub?`Sub: ${cfg.sub}`:'')].filter(Boolean).join(' | ');
-  const rmL=[(cfg.marks?`FM: ${cfg.marks}`:''), (cfg.date?`Date: ${cfg.date}`:'')].filter(Boolean).join(' | ');
-  const rmR=[(cfg.time?`Time: ${cfg.time}`:''), (cfg.tot?`Q: ${cfg.tot}`:'')].filter(Boolean).join(' | ');
-  if(lm||rmL||rmR) html+=`<div class="p-meta"><div>${lm}</div><div class="p-right">${[rmL,rmR].filter(Boolean).join('<br>')}</div></div>`;
-  html+=`</div>`;
-  if(cfg.showCh&&cfg.vChap) html+=`<div class="p-chap-row ${cfg.chapFont}">Chapter: ${cfg.vChap}</div>`;
-  let stdInfo=[];
-  if(cfg.showNm) stdInfo.push(`Name: ${cfg.vNm||'_______________'}`);
-  if(cfg.showRl) stdInfo.push(`Roll: ${cfg.vRl||'______'}`);
-  if(cfg.showFt) stdInfo.push(`Father: ${cfg.vFt||'_______________'}`);
-  if(cfg.showSt) stdInfo.push(`Set: ${setLabel||cfg.vSt||'___'}`);
-  if(stdInfo.length) html+=`<div class="p-std-row">${stdInfo.map(s=>`<span>${s}</span>`).join('')}</div>`;
+  // --- नया लेआउट (Yellow Mark वाले डिज़ाइन के अनुसार) ---
+  let leftLines = [];
+  if(cfg.cls) leftLines.push(`Class: ${cfg.cls}`);
+  if(cfg.sub) leftLines.push(`Sub: ${cfg.sub}`);
+  if(cfg.showNm) leftLines.push(`Name: ${cfg.vNm || '_______________'}`);
+  if(cfg.showRl) leftLines.push(`Roll: ${cfg.vRl || '______'}`);
+
+  let rightLines = [];
+  const rRow1 = [(cfg.marks?`FM: ${cfg.marks}`:''), (cfg.date?`Date: ${cfg.date}`:'')].filter(Boolean).join(' | ');
+  if(rRow1) rightLines.push(rRow1);
+  const rRow2 = [(cfg.time?`Time: ${cfg.time}`:''), (cfg.tot?`Q: ${cfg.tot}`:'')].filter(Boolean).join(' | ');
+  if(rRow2) rightLines.push(rRow2);
+  if(cfg.showFt) rightLines.push(`Father: ${cfg.vFt || '_______________'}`);
+  if(cfg.showSt) rightLines.push(`Set: ${setLabel || cfg.vSt || '___'}`);
+
+  const lHTML = leftLines.join('<br>');
+  const rHTML = rightLines.join('<br>');
+
+  if(lHTML || rHTML) {
+    html += `<div class="p-meta"><div style="text-align:left;line-height:1.4;">${lHTML}</div><div class="p-right" style="line-height:1.4;">${rHTML}</div></div>`;
+  }
+  
+  html += `</div>`; // Header की बॉर्डर लाइन यहाँ क्लोज़ होगी
+
+  if(cfg.showCh && cfg.vChap) {
+    html += `<div class="p-chap-row ${cfg.chapFont}">Chapter: ${cfg.vChap}</div>`;
+  }
+  // --------------------------------------------------------
 
   let gN=1;
   if(dataObj.m.length){
