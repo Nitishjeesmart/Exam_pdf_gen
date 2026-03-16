@@ -243,7 +243,7 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
   <div class="profile-modal-box">
     <!-- Banner Area -->
     <div class="pm-banner" id="pmBanner" onclick="document.getElementById('bannerInput').click()">
-      <div class="pm-banner-edit">📸 Banner बदलें (YouTube Style)</div>
+      <div class="pm-banner-edit">📸 Banner</div>
     </div>
     <input type="file" id="bannerInput" accept="image/*" style="display:none" onchange="uploadBanner(this)">
 
@@ -321,7 +321,10 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
 <div id="tab-import" class="tab-section active">
   <div class="card">
     <h3><i class="fas fa-file-import"></i>JSON से सवाल जोड़ें</h3>
-    <button class="btn btn-primary btn-copy" onclick="getTemp('mcq')"><i class="fas fa-list-ol"></i> 10 MCQs फॉर्मेट</button>
+    <div style="display:flex; gap:10px; margin-bottom:8px;">
+      <button class="btn btn-primary btn-copy" style="margin-bottom:0; flex:1;" onclick="getTemp('mcq')"><i class="fas fa-list-ol"></i> Normal MCQ</button>
+      <button class="btn btn-primary btn-copy" style="margin-bottom:0; flex:1; background:linear-gradient(135deg,#e1bee7,#ce93d8); border-color:#ba68c8; color:#4a148c;" onclick="getMathPrompt()"><i class="fas fa-superscript"></i> Maths Prompt</button>
+    </div>
     <button class="btn btn-primary btn-copy" onclick="getTemp('short')"><i class="fas fa-align-left"></i> 10 Short फॉर्मेट</button>
     <button class="btn btn-primary btn-copy" onclick="getTemp('long')"><i class="fas fa-align-justify"></i> 10 Long फॉर्मेट</button>
     <div style="border-top:2px solid rgba(0,0,0,.06);margin:12px 0;"></div>
@@ -341,7 +344,7 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
           <div>
             <label style="margin:0 0 4px;font-size:10px;">Size</label>
             <select id="pdfQSize" style="margin:0;padding:8px;font-size:12px;" onchange="updateFontPrev();saveFontSettings()">
-              <option value="8pt">8pt</option><option value="9pt">9pt</option><option value="10pt" selected>10pt</option><option value="11pt">11pt</option><option value="12pt">12pt</option><option value="13pt">13pt</option>
+              <option value="8pt">8pt</option><option value="9pt">9pt</option><option value="10pt" selected>10pt</option><option value="11pt">11pt</option><option value="12pt">12pt</option><option value="13pt">13pt</option><option value="14pt">14pt</option><option value="15pt">15pt</option><option value="16pt">16pt</option><option value="17pt">17pt</option><option value="18pt">18pt</option><option value="19pt">19pt</option><option value="20pt">20pt</option><option value="21pt">21pt</option><option value="22pt">22pt</option><option value="23pt">23pt</option><option value="24pt">24pt</option>
             </select>
           </div>
           <div>
@@ -364,7 +367,7 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
           <div>
             <label style="margin:0 0 4px;font-size:10px;">Size</label>
             <select id="pdfOptSize" style="margin:0;padding:8px;font-size:12px;" onchange="updateFontPrev();saveFontSettings()">
-              <option value="8pt">8pt</option><option value="9pt">9pt</option><option value="9.5pt" selected>9.5pt</option><option value="10pt">10pt</option><option value="11pt">11pt</option>
+              <option value="8pt">8pt</option><option value="9pt">9pt</option><option value="9.5pt" selected>9.5pt</option><option value="10pt">10pt</option><option value="11pt">11pt</option><option value="12pt">12pt</option><option value="13pt">13pt</option><option value="14pt">14pt</option><option value="15pt">15pt</option><option value="16pt">16pt</option><option value="17pt">17pt</option><option value="18pt">18pt</option><option value="19pt">19pt</option><option value="20pt">20pt</option><option value="21pt">21pt</option><option value="22pt">22pt</option><option value="23pt">23pt</option><option value="24pt">24pt</option>
             </select>
           </div>
           <div>
@@ -387,7 +390,7 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
           <div>
             <label style="margin:0 0 4px;font-size:10px;">Size</label>
             <select id="pdfAnsSize" style="margin:0;padding:8px;font-size:12px;" onchange="saveFontSettings()">
-              <option value="8pt">8pt</option><option value="9pt" selected>9pt</option><option value="10pt">10pt</option>
+              <option value="8pt">8pt</option><option value="9pt" selected>9pt</option><option value="10pt">10pt</option><option value="11pt">11pt</option><option value="12pt">12pt</option><option value="13pt">13pt</option><option value="14pt">14pt</option><option value="15pt">15pt</option><option value="16pt">16pt</option><option value="17pt">17pt</option><option value="18pt">18pt</option><option value="19pt">19pt</option><option value="20pt">20pt</option><option value="21pt">21pt</option><option value="22pt">22pt</option><option value="23pt">23pt</option><option value="24pt">24pt</option>
             </select>
           </div>
         </div>
@@ -1084,7 +1087,46 @@ function getTemp(t){
     else arr.push({type:t,question:`Sample ${t.toUpperCase()} Q${i}: \\(x^2+5x+6\\) हल करें।`,model_answer:`\\(x=-2,-3\\)`,marks:t==='short'?2:5});
   }
   document.getElementById('txtTemp').value=JSON.stringify(arr,null,2);
+  document.getElementById('modTemp').querySelector('h3').innerHTML = 'JSON Template - Copy करें';
   document.getElementById('modTemp').style.display='flex';
+}
+
+function getMathPrompt(){
+  const mathPrompt = `**Role & Goal:**
+You are an expert Math content digitizer. Your strict job is to extract mathematical questions and their multiple-choice options from provided images and convert them perfectly into a specific JSON format for a custom quiz app.
+
+**Output Format (Strict JSON array only):**
+[
+  {
+    "question": "Question text here with math in LaTeX",
+    "options": {
+      "A": "Option 1",
+      "B": "Option 2",
+      "C": "Option 3",
+      "D": "Option 4",
+      "E": "Option 5 (if exists)"
+    },
+    "correct": "Correct option key (A, B, C, D, or E)"
+  }
+]
+
+**Crucial Math Formatting Rules (LaTeX):**
+1. **Double Escaping (Mandatory):** Always use double backslashes for all LaTeX commands inside the JSON string to prevent app parsing errors. (Example: use \\\\frac{1}{2}, NOT \\frac{1}{2}).
+2. **Strict Braces for Powers/Subscripts:** Whenever there is an exponent (power) or subscript, you MUST enclose the exact value in curly braces { }, even if it is a single number or character. (Example: write x^{2}, 4^{x}, m^{n}, NOT x^2, 4^x, m^n).
+3. **Roots & Surds:** Use \\\\sqrt{x} for square roots and \\\\sqrt[n]{x} for nth roots.
+4. **Operators:** Use \\\\times for multiplication symbol (x), and \\\\div for the division symbol (÷).
+5. **Fractions:** Use \\\\frac{numerator}{denominator}.
+6. **Negative Powers:** Always wrap negative powers in braces. (Example: 2^{-3}).
+
+**General Rules:**
+- Keep the original Hindi text as it is. Do not translate the Hindi text into English.
+- Accurately solve or determine the correct answer and put its key in the "correct" field.
+- If an option says "इनमें से कोई नहीं" (None of these), always include it as the last option.
+- **CRITICAL:** Output ONLY the raw JSON array. Do not add any conversational text, greetings, explanations, or Markdown formatting blocks (like \`\`\`json) outside the array. Start immediately with [ and end with ].`;
+
+  document.getElementById('txtTemp').value = mathPrompt;
+  document.getElementById('modTemp').querySelector('h3').innerHTML = 'Maths AI Prompt - Copy करें';
+  document.getElementById('modTemp').style.display = 'flex';
 }
 function runImport(){
   try{
