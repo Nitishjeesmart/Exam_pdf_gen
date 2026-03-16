@@ -505,18 +505,39 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
 
 <!-- ===== TAB: MANAGE ===== -->
 <div id="tab-manage" class="tab-section">
-  <div class="card" style="border-color:rgba(21,101,192,.15);">
+  <div class="card" style="border-color:rgba(46, 125, 50, 0.2);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 style="margin:0;border:none;color:#1565c0;"><i class="fas fa-database" style="color:#1565c0;"></i>Question Bank</h3>
+      <h3 style="margin:0;border:none;color:#2e7d32;"><i class="fas fa-plus-circle" style="color:#2e7d32;"></i>मैनुअल सवाल जोड़ें</h3>
     </div>
-    <div style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);padding:12px;border-radius:10px;margin-bottom:12px;border:2px solid #90caf9;">
-      <label style="margin:0 0 6px;color:#1565c0;">Bank में सेव करें</label>
-      <div class="row-2" style="margin:0;">
-        <input id="qbankName" placeholder="जैसे: Math-Ch5, Science-Q" style="margin:0;">
-        <button class="btn btn-success" style="padding:10px;font-size:12px;margin:0;" onclick="saveQBank()"><i class="fas fa-save"></i>Save</button>
-      </div>
+    
+    <label>सवाल का प्रकार (Type)</label>
+    <select id="manType" onchange="toggleManualFields()">
+      <option value="mcq">MCQ (बहुविकल्पीय)</option>
+      <option value="short">Short Answer (SQ)</option>
+      <option value="long">Long Answer (LQ)</option>
+    </select>
+    
+    <label>सवाल (Question)</label>
+    <textarea id="manQ" style="height:60px;" placeholder="यहाँ अपना सवाल टाइप या पेस्ट करें..."></textarea>
+    
+    <div id="manMcqFields">
+      <div class="row-2"><input id="manOpA" placeholder="Option A"><input id="manOpB" placeholder="Option B"></div>
+      <div class="row-2"><input id="manOpC" placeholder="Option C"><input id="manOpD" placeholder="Option D"></div>
+      <div class="row-2"><input id="manOpE" placeholder="Option E (खाली छोड़ सकते हैं)"><div></div></div>
+      <label>सही उत्तर चुनें</label>
+      <select id="manAns">
+        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+      </select>
     </div>
-    <div id="qbankList"><div style="text-align:center;padding:20px;color:#999;font-style:italic;">कोई Bank नहीं</div></div>
+    
+    <div id="manSubjFields" style="display:none;">
+      <label>मॉडल उत्तर (Answer)</label>
+      <textarea id="manMans" style="height:60px;" placeholder="मॉडल उत्तर (वैकल्पिक)..."></textarea>
+      <label>अंक (Marks)</label>
+      <input type="number" id="manMarks" value="2">
+    </div>
+    
+    <button class="btn btn-success" style="margin-top:12px;" onclick="addManualQuestion()"><i class="fas fa-check"></i>सवाल लिस्ट में जोड़ें</button>
   </div>
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
@@ -1560,6 +1581,64 @@ function doCopy(){document.getElementById('txtTemp').select();document.execComma
 function closeMod(id){document.getElementById(id).style.display='none';}
 function resetAll(){showConfirm('ऐप रीसेट करें?','सभी डेटा खो जाएगा!',()=>{localStorage.clear();location.reload();});}
 document.getElementById('histSearch')?.addEventListener('input',filterHist);
+
+// ================================================================
+// MANUAL QUESTION ADD
+// ================================================================
+function toggleManualFields() {
+  const type = document.getElementById('manType').value;
+  const mcqF = document.getElementById('manMcqFields');
+  const subjF = document.getElementById('manSubjFields');
+  const marksI = document.getElementById('manMarks');
+  
+  if (type === 'mcq') {
+    mcqF.style.display = 'block';
+    subjF.style.display = 'none';
+  } else {
+    mcqF.style.display = 'none';
+    subjF.style.display = 'block';
+    marksI.value = (type === 'short') ? 2 : 5;
+  }
+}
+
+function addManualQuestion() {
+  const type = document.getElementById('manType').value;
+  const q = document.getElementById('manQ').value.trim();
+  
+  if (!q) { 
+    showToast('⚠️ कृपया पहले सवाल लिखें!', 'error'); 
+    return; 
+  }
+  
+  if (type === 'mcq') {
+    const opts = ['A','B','C','D','E'].map(k => document.getElementById('manOp'+k)?.value.trim() || '').filter(v => v !== '');
+    if (opts.length < 2) { 
+      showToast('⚠️ कम से कम 2 Options लिखना ज़रूरी है!', 'error'); 
+      return; 
+    }
+    const a = document.getElementById('manAns').value;
+    db.m.push({ q: q, o: opts, a: a });
+  } else {
+    const mAns = document.getElementById('manMans').value.trim();
+    const mrk = document.getElementById('manMarks').value || ((type === 'short') ? 2 : 5);
+    if (type === 'short') {
+      db.s.push({ q: q, m: mrk, a: mAns });
+    } else {
+      db.l.push({ q: q, m: mrk, a: mAns });
+    }
+  }
+  
+  save(); 
+  playSound('add');
+  showToast('✅ सवाल लिस्ट में जुड़ गया!', 'success');
+  
+  document.getElementById('manQ').value = '';
+  ['A','B','C','D','E'].forEach(k => {
+    const el = document.getElementById('manOp'+k);
+    if(el) el.value = '';
+  });
+  document.getElementById('manMans').value = '';
+}
 </script>
 </body>
 </html>
