@@ -203,7 +203,7 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
   .opt.correct-ans{font-weight:900}
   .tick{font-weight:bold;font-size:11pt}
   .ans-panel{background:#ebebeb !important;padding:2px 6px;font-size:9pt;font-style:italic;border-left:3px solid #000;margin-top:2px;-webkit-print-color-adjust:exact;print-color-adjust:exact;word-wrap:break-word}
-  .p-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);color:rgba(0,0,0,.07);pointer-events:none;z-index:-1;font-weight:900;text-transform:uppercase;width:200%;text-align:center;line-height:1.2}
+  .p-watermark{position:fixed;top:50%;left:50%;color:rgba(0,0,0,.08);pointer-events:none;z-index:1;font-weight:900;text-transform:uppercase;width:200%;text-align:center;line-height:1.2;white-space:nowrap;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   /* ✅ FOOTER FIX: Renders in bottom margin, never covers content */
   .p-footer-fixed{position:fixed;bottom:0;left:0;right:0;border-top:1.5px solid #000;padding:4px 0.35cm;background:white !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:9pt;z-index:9999;height:auto;}
   mjx-container{display:inline-block !important}
@@ -618,8 +618,25 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
 
     <div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:14px;border-radius:12px;margin-top:12px;border:2px solid #a5d6a7;">
       <label style="margin-top:0;color:#2e7d32;">वाटरमार्क (Optional)</label>
-      <div class="row-2"><input id="wMark" placeholder="Coaching Name..." style="margin:0;"><select id="waterFont" style="margin:0;" onchange="updateFontPreview('water')"><option value="font-roboto">Roboto</option></select></div>
-      <div id="waterPreview" class="font-preview">वाटरमार्क</div>
+      <div class="row-2" style="margin-bottom:8px;"><input id="wMark" placeholder="Coaching Name..." style="margin:0;"><select id="waterFont" style="margin:0;" onchange="updateFontPreview('water')"><option value="font-roboto">Roboto</option></select></div>
+      <div class="row-2">
+        <select id="waterStyle" style="margin:0;" onchange="saveSetupValue('waterStyle')">
+          <option value="-45deg">Diagonal 1 (तिरछा ऊपर)</option>
+          <option value="0deg">Horizontal (सीधा)</option>
+          <option value="45deg">Diagonal 2 (तिरछा नीचे)</option>
+          <option value="-90deg">Vertical (खड़ा)</option>
+        </select>
+        <div id="waterPreview" class="font-preview" style="margin-top:0; min-height:42px;">वाटरमार्क</div>
+      </div>
+      <label style="margin-top:10px;color:#2e7d32;">💧 Watermark Opacity (हल्का ←→ गहरा)</label>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:11px;color:#2e7d32;font-weight:700;">हल्का</span>
+        <input type="range" id="waterOpacity" min="2" max="20" value="7" step="1"
+          style="flex:1;margin:0;padding:0;height:6px;accent-color:#2e7d32;border:none;background:transparent;"
+          oninput="document.getElementById('waterOpacityVal').textContent=this.value+'%';saveSetupValue('waterOpacity')">
+        <span style="font-size:11px;color:#2e7d32;font-weight:700;">गहरा</span>
+        <span id="waterOpacityVal" style="font-size:12px;font-weight:800;color:#2e7d32;min-width:32px;">7%</span>
+      </div>
     </div>
 
     <div style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);padding:14px;border-radius:12px;margin-top:12px;border:2px solid #90caf9;">
@@ -1010,7 +1027,7 @@ function getFontSettings(){
 const SETUP_KEYS=['inst','addr','exam','cls','sub','time','marks','tot','date','wMark','chap',
   'vNm','vRl','vFt','vSt','instFont','addrFont','examFont','waterFont','chapFont',
   'ckCh','ckNm','ckRl','ckFt','ckSt','headerBgColor','headerTextColor','headerBorderColor',
-  'footerLeft','footerRight'];
+  'footerLeft','footerRight','waterStyle','waterOpacity'];
 function loadSetupValues(){
   SETUP_KEYS.forEach(k=>{
     const s=localStorage.getItem(`setup_${k}`),el=document.getElementById(k);
@@ -1208,6 +1225,8 @@ function getConfig(){
     instFont:document.getElementById('instFont').value,addrFont:document.getElementById('addrFont').value,
     examFont:document.getElementById('examFont').value,waterFont:document.getElementById('waterFont').value,
     chapFont:document.getElementById('chapFont').value,
+    waterStyle:document.getElementById('waterStyle') ? document.getElementById('waterStyle').value : '-45deg',
+    waterOpacity: document.getElementById('waterOpacity') ? (parseInt(document.getElementById('waterOpacity').value)||7)/100 : 0.07,
     headerBgColor:document.getElementById('headerBgColor').value||'#ffffff',
     headerTextColor:document.getElementById('headerTextColor').value||'#000000',
     headerBorderColor:document.getElementById('headerBorderColor').value||'#000000',
@@ -1239,7 +1258,11 @@ function buildPDFContent(dataObj,cfg,isT,setLabel){
   const wl=(cfg.vWater||'').length;
   const wfs=wl>70?'24pt':wl>50?'30pt':wl>30?'40pt':'55pt';
   let html='';
-  if(cfg.vWater) html+=`<div class="p-watermark ${cfg.waterFont}" style="font-size:${wfs}">${cfg.vWater}</div>`;
+  if(cfg.vWater) {
+    const wAngle = cfg.waterStyle || '-45deg';
+    const wOpacity = cfg.waterOpacity || 0.07;
+    html+=`<div class="p-watermark ${cfg.waterFont}" style="font-size:${wfs};color:rgba(0,0,0,${wOpacity});transform:translate(-50%,-50%) rotate(${wAngle});">${cfg.vWater}</div>`;
+  }
 
   // Header
   html+=`<div class="p-header-main" style="${hCSS}">`;
