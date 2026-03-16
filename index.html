@@ -195,11 +195,11 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
   .sec-instr{font-size:8.5pt;font-style:italic;text-align:center;margin-bottom:4px;color:#333}
   .q-box{margin-bottom:0.1mm;page-break-inside:avoid;break-inside:avoid}
   .q-num{font-weight:800;margin-right:3px}
-  .q-txt{font-weight:700;display:inline;text-align:justify;line-height:1.15}
+  .q-txt{font-weight:700;display:inline;text-align:justify;line-height:1.0}
   .opt-grid-4{display:grid;grid-template-columns:25% 25% 25% 25%;width:100%;margin-top:0.1mm}
   .opt-grid-5{display:grid;grid-template-columns:20% 20% 20% 20% 20%;width:100%;margin-top:0.1mm}
   .opt-grid-2{display:grid;grid-template-columns:50% 50%;width:100%;margin-top:0.1mm}
-  .opt{overflow:hidden;text-overflow:ellipsis;padding-right:3px;line-height:1.2;word-break:break-word}
+  .opt{overflow:hidden;text-overflow:ellipsis;padding-right:3px;line-height:1.0;word-break:break-word}
   .opt.correct-ans{font-weight:900}
   .tick{font-weight:bold;font-size:11pt}
   .ans-panel{background:#ebebeb !important;padding:2px 6px;font-size:9pt;font-style:italic;border-left:3px solid #000;margin-top:2px;-webkit-print-color-adjust:exact;print-color-adjust:exact;word-wrap:break-word}
@@ -208,6 +208,7 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
   .p-footer-fixed{position:fixed;bottom:0;left:0;right:0;border-top:1.5px solid #000;padding:4px 0.35cm;background:white !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:9pt;z-index:9999;height:auto;}
   mjx-container{display:inline-block !important}
   mjx-container svg{max-width:100% !important;vertical-align:middle}
+  .col-2-layout { column-count: 2; column-gap: 0.6cm; }
 }
 #print-area{display:none}.hidden{display:none !important}
 </style>
@@ -677,8 +678,12 @@ input[type="color"]{width:48px;height:38px;padding:2px;border-radius:8px;cursor:
     <div class="dl-wrap">
       <button class="btn btn-allsets" onclick="generateAllSets()"><i class="fas fa-layer-group"></i>📋 सभी Sets (A+B+C+D)</button>
     </div>
-    <div class="dl-wrap">
-      <button class="btn btn-wa" onclick="shareViaWhatsApp()"><i class="fab fa-whatsapp"></i>📱 WhatsApp Share</button>
+    <div style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);padding:14px;border-radius:14px;margin-bottom:12px;border:2px solid #90caf9;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="document.getElementById('chkTwoCol').click()">
+      <div>
+        <div style="font-weight:800;color:#1565c0;font-size:15px;"><i class="fas fa-columns"></i> 2-Column PDF (डबल)</div>
+        <div style="font-size:11px;color:#1565c0;margin-top:2px;font-weight:600;">एक पेज में ज़्यादा सवाल (Left-Right)</div>
+      </div>
+      <input type="checkbox" id="chkTwoCol" style="width:22px;height:22px;accent-color:#1565c0;cursor:pointer;" onclick="event.stopPropagation()">
     </div>
   </div>
 </div>
@@ -1207,6 +1212,7 @@ function getConfig(){
     headerTextColor:document.getElementById('headerTextColor').value||'#000000',
     headerBorderColor:document.getElementById('headerBorderColor').value||'#000000',
     borderStyle:selectedBorder,
+    isTwoCol: document.getElementById('chkTwoCol') ? document.getElementById('chkTwoCol').checked : false,
     ...getFontSettings()
   };
 }
@@ -1255,8 +1261,8 @@ function buildPDFContent(dataObj,cfg,isT,setLabel){
   if(cfg.showFt) rightLines.push(`Father: ${cfg.vFt || '_______________'}`);
   if(cfg.showSt) rightLines.push(`Set: ${setLabel || cfg.vSt || '___'}`);
 
-  const lHTML = leftLines.map(line => `<div style="margin-bottom: 0.1mm; line-height: 1.1;">${line}</div>`).join('');
-  const rHTML = rightLines.map(line => `<div style="margin-bottom: 0.1mm; line-height: 1.1;">${line}</div>`).join('');
+  const lHTML = leftLines.map(line => `<div style="margin-bottom: 0; line-height: 0.95;">${line}</div>`).join('');
+  const rHTML = rightLines.map(line => `<div style="margin-bottom: 0; line-height: 0.95;">${line}</div>`).join('');
 
   if(lHTML || rHTML) {
     html += `<div class="p-meta"><div style="text-align:left;">${lHTML}</div><div class="p-right">${rHTML}</div></div>`;
@@ -1272,12 +1278,15 @@ function buildPDFContent(dataObj,cfg,isT,setLabel){
   let gN=1;
   if(dataObj.m.length){
     html+=`<div class="sec-h">Section - A (Objective Type)</div>`;
-    html+=`<div class="sec-instr">निर्देश: प्रत्येक प्रश्न के लिए सही विकल्प चुनें।</div>`;
+    html+=`<div class="${fs.isTwoCol ? 'col-2-layout' : ''}">`; // 2-Column Wrapper
     dataObj.m.forEach((q,i)=>{
       const num=autoNum?gN++:(i+1);
       const qText=wrapMath(q.q);
       const optCount=q.o.length;
-      const gridClass=optCount>=5?'opt-grid-5':(optCount===2?'opt-grid-2':'opt-grid-4');
+      
+      // 2-Column होने पर 4 Options को 2x2 (A B ऊपर, C D नीचे) में बदल देगा, वरना 4 एक लाइन में रहेंगे
+      const gridClass = (fs.isTwoCol && optCount === 4) ? 'opt-grid-2' : (optCount>=5?'opt-grid-5':(optCount===2?'opt-grid-2':'opt-grid-4'));
+      
       const optLabels=['(A)','(B)','(C)','(D)','(E)','(F)'];
       let optsHTML='';
       q.o.forEach((txt,idx)=>{
@@ -1289,14 +1298,17 @@ function buildPDFContent(dataObj,cfg,isT,setLabel){
       });
       html+=`<div class="q-box"><div style="font-family:${fs.qFont};font-size:${fs.qSize};font-weight:${fs.qWeight};line-height:1.2;margin-bottom:1px;"><span class="q-num">${num}.</span><span class="q-txt">${qText}</span></div><div class="${gridClass}">${optsHTML}</div></div>`;
     });
+    html+=`</div>`; // Wrapper Close
   }
   const renderW=(arr,title)=>{
     if(!arr.length)return;
     html+=`<div class="sec-h">${title}</div>`;
+    html+=`<div class="${fs.isTwoCol ? 'col-2-layout' : ''}">`; // 2-Column Wrapper
     arr.forEach((q,i)=>{
       const num=autoNum?gN++:(i+1);
       html+=`<div class="q-box"><div style="font-family:${fs.qFont};font-size:${fs.qSize};font-weight:${fs.qWeight};line-height:1.2;"><span class="q-num">${num}.</span><span class="q-txt">${wrapMath(q.q)}</span><span style="float:right;font-size:${fs.qSize};">[${q.m}]</span></div>${isT?`<div class="ans-panel" style="font-family:${fs.ansFont};font-size:${fs.ansSize};"><b>Ans:</b> ${wrapMath(q.a||'')}</div>`:''}</div>`;
     });
+    html+=`</div>`; // Wrapper Close
   };
   renderW(dataObj.s,'Section - B (Short Answer)');
   renderW(dataObj.l,'Section - C (Long Answer)');
